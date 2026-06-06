@@ -110,13 +110,13 @@
   <div class="paper-grain"></div>
 
   <!-- Background Floating Vector System -->
-  <canvas id="ambient-canvas" class="fixed inset-0 pointer-events-none z Suspend-0 opacity-40"></canvas>
+  <canvas id="ambient-canvas" class="fixed inset-0 pointer-events-none z-0 opacity-40"></canvas>
 
   <!-- Hidden YouTube Player Container Needed for API -->
   <div id="yt-player" class="absolute pointer-events-none opacity-0 w-1 h-1"></div>
 
-  <!-- Interactive 3D Folding Envelope Portal -->
-  <div id="envelope-wrapper" class="relative z-10 select-none cursor-pointer flex flex-col items-center p-2 w-full max-w-[420px] sm:max-w-[450px] opacity-0 will-change-transform">
+  <!-- Interactive 3D Folding Envelope Portal (Initialized cleanly as hidden to stop snaps) -->
+  <div id="envelope-wrapper" class="relative z-10 select-none cursor-pointer flex flex-col items-center p-2 w-full max-w-[420px] sm:max-w-[450px] opacity-0 pointer-events-none will-change-transform" style="transform: translateY(60px);">
     <div id="envelope-body-wrapper" class="relative w-full aspect-[3/2] transition-transform duration-700 ease-out hover:scale-[1.02]">
       
       <!-- Envelope Backboard Frame -->
@@ -384,7 +384,7 @@
         <span class="text-4xl sm:text-6xl animate-bounce inline-block">❤️</span>
       </div>
       <h2 id="final-text" class="font-serif italic text-lg sm:text-3xl md:text-4xl text-amber-100 font-bold leading-relaxed tracking-wide min-h-[80px] sm:min-h-[100px]"></h2>
-      <p class="text-zinc-500 font-poppins text-[8px] sm:text-[10px] uppercase tracking-[0.3em] mt-6 sm:mt-8 animate-pulse">Eternal Bond Dedicated to Sanjana</p>
+      <p class="text-zinc-500 font-poppins text-[8px] sm:text-[10px] uppercase tracking-[0.3em] mt-6 sm:mt-8 animate-pulse">Permanent Bond Dedicated to Sanjana</p>
     </div>
   </div>
 
@@ -521,21 +521,30 @@
         ease: "fluidInOut",
         onComplete: () => {
           loadActive = false;
-          document.getElementById('loading-screen').remove();
+          const loaderEl = document.getElementById('loading-screen');
+          if (loaderEl) loaderEl.remove();
         }
       });
 
-      // Liquid smooth entry fade-in for Envelope Portal
-      loadTl.set('#envelope-wrapper', { pointerEvents: "auto", y: 60 });
-      loadTl.to('#envelope-wrapper', {
-        opacity: 1,
-        y: 0,
-        duration: 1.6,
-        ease: "fluidOut",
-        onComplete: () => {
-          startEnvelopeIdle();
-        }
-      }, "-=0.8");
+      // --- CRITICAL ULTIMATE JERK FIX ---
+      // We use clean .fromTo to forcefully declare the start and end coordinates explicitly when playing.
+      loadTl.fromTo('#envelope-wrapper', 
+        { opacity: 0, y: 60 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1.6,
+          ease: "fluidOut",
+          onStart: () => {
+            // Give pointer tracking back exactly when visual start initiates
+            document.getElementById('envelope-wrapper').style.pointerEvents = "auto";
+          },
+          onComplete: () => {
+            startEnvelopeIdle();
+          }
+        }, 
+        "-=0.8"
+      );
     });
 
 
@@ -807,7 +816,7 @@
       if (isOpened) return;
       isOpened = true;
 
-      // Crucial Fix: Instantly kill active idle hover loops to prevent overlapping transformation values
+      // Instantly terminate active loops to prevent structural math calculation glitches
       if (envelopeIdleTween) {
         envelopeIdleTween.kill();
         envelopeIdleTween = null;
@@ -833,14 +842,14 @@
         ease: "power2.in"
       }, "-=0.5");
 
-      // Gorgeous hardware accelerated 3D flap flip
+      // Hardware accelerated 3D paper folding logic
       tl.to('#envelope-top-flap', {
         rotateX: 180,
         duration: 1.2,
         ease: "fluidInOut"
       }, "-=0.2");
 
-      // Smooth mechanical sheet pull out
+      // Smooth structural sheet layout exit
       tl.to('#dummy-letter', {
         y: -150,
         duration: 1.2,
@@ -856,7 +865,7 @@
         display: "none"
       }, "-=0.6");
 
-      // Display container window effortlessly
+      // Display main document interface
       tl.set('#letter-modal', { pointerEvents: "auto" });
       tl.to('#letter-modal', {
         opacity: 1,
@@ -864,7 +873,7 @@
         ease: "power2.out"
       }, "-=0.6");
 
-      // Lift card from down under with fluid deceleration
+      // Smooth modular rise
       gsap.fromTo('#modal-card', 
         { y: 80, scale: 0.95 }, 
         { y: 0, scale: 1, duration: 1.4, ease: "fluidOut" }
@@ -893,7 +902,7 @@
     });
 
     document.getElementById('close-letter-btn').addEventListener('click', () => {
-      // Clear all active running timelines on the elements to prevent visual snapping
+      // Clear active elements down the structural tree to prevent layout collisions
       gsap.killTweensOf(['#gate-left', '#gate-right', '#modal-card', '#letter-modal', '#envelope-wrapper', '#dummy-letter', '#envelope-top-flap', '#wax-seal']);
       
       gsap.set(['#gate-left', '#gate-right'], { opacity: 1 });
@@ -917,16 +926,21 @@
         ease: "power2.in"
       }, "-=0.4");
 
-      // Explicitly clear inline transforms before sliding back down safely
-      closeTl.set('#envelope-wrapper', { display: 'flex', y: 0, scale: 1 });
-      closeTl.to('#envelope-wrapper', {
-        opacity: 1,
-        duration: 1.0,
-        ease: "fluidOut",
-        onComplete: () => {
-          startEnvelopeIdle();
-        }
-      }, "-=0.2");
+      // Safely reset configuration properties on active envelope window
+      closeTl.set('#envelope-wrapper', { display: 'flex', pointerEvents: "auto" });
+      closeTl.fromTo('#envelope-wrapper',
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1.0,
+          ease: "fluidOut",
+          onComplete: () => {
+            startEnvelopeIdle();
+          }
+        },
+        "-=0.2"
+      );
 
       closeTl.to('#dummy-letter', {
         y: 0,
