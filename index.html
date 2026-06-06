@@ -139,7 +139,7 @@
       <div id="wax-seal" class="absolute left-1/2 top-[48%] -translate-x-1/2 -translate-y-1/2 z-40 flex flex-col items-center">
         <div class="w-14 h-14 sm:w-20 sm:h-20 bg-gradient-to-br from-red-700 via-rose-800 to-red-950 rounded-full shadow-lg border border-red-500/20 flex items-center justify-center cursor-pointer transform hover:scale-105 active:scale-95 transition-all duration-300">
           <div class="absolute inset-1 rounded-full border border-yellow-500/10 opacity-40"></div>
-          <span class="font-serif text-amber-100 text-sm sm:text-lg font-bold tracking-wider select-none drop-shadow-md">S & M</span>
+          <span class="font-serif text-amber-100 text-sm sm:text-lg font-bold tracking-wider select-none drop-shadow-md">M & S</span>
         </div>
         <div class="absolute w-14 h-14 sm:w-20 sm:h-20 bg-red-600/20 rounded-full -z-10 animate-ping"></div>
       </div>
@@ -288,7 +288,7 @@
 
             <!-- Jukebox Favorite Tune Button -->
             <button id="tune-btn" class="w-full mt-3 bg-gradient-to-r from-amber-600 to-amber-500 text-zinc-950 font-poppins font-bold text-xs sm:text-sm py-2 sm:py-2.5 px-4 rounded-lg shadow-md transform hover:brightness-110 active:scale-[0.98] transition-all duration-200 uppercase tracking-wider flex items-center justify-center gap-2 border border-amber-300/20">
-              <span>📻 Tune Sanjana's Tune</span>
+              <span>📻 Tune Our Fav</span>
             </button>
           </div>
         </div>
@@ -446,7 +446,7 @@
       }
     }
 
-    for (let i = 0; i < 16; i++) { // Slightly lower particle count for smooth mobile layout performance
+    for (let i = 0; i < 16; i++) { 
       ambientParticles.push(new AmbientParticle());
     }
 
@@ -518,7 +518,7 @@
     }
 
     function triggerExplosion(x, y) {
-      const pCount = window.innerWidth < 640 ? 70 : 150; // Dynamic scaling counts for mobile responsiveness
+      const pCount = window.innerWidth < 640 ? 70 : 150; 
       for (let i = 0; i < pCount; i++) {
         stardustParticles.push(new StarParticle(x, y));
       }
