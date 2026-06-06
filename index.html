@@ -115,7 +115,7 @@
   <!-- Hidden YouTube Player Container Needed for API -->
   <div id="yt-player" class="absolute pointer-events-none opacity-0 w-1 h-1"></div>
 
-  <!-- Interactive 3D Folding Envelope Portal (Initialized cleanly as hidden to stop snaps) -->
+  <!-- Interactive 3D Folding Envelope Portal -->
   <div id="envelope-wrapper" class="relative z-10 select-none cursor-pointer flex flex-col items-center p-2 w-full max-w-[420px] sm:max-w-[450px] opacity-0 pointer-events-none will-change-transform" style="transform: translateY(60px);">
     <div id="envelope-body-wrapper" class="relative w-full aspect-[3/2] transition-transform duration-700 ease-out hover:scale-[1.02]">
       
@@ -123,7 +123,7 @@
       <div class="absolute inset-0 bg-[#f4ebd0] rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.55)] sm:shadow-[0_30px_70px_rgba(0,0,0,0.65)] border border-parchment-darker/50"></div>
 
       <!-- Dummy Paper Page Sticking Inside Envelope -->
-      <div id="dummy-letter" class="absolute inset-x-5 sm:inset-x-6 top-3 sm:top-4 h-20 sm:h-32 bg-parchment rounded shadow-inner z-10 transform translate-y-0 flex flex-col p-3 sm:p-4 border border-zinc-200 will-change-transform">
+      <div id="dummy-letter" class="absolute inset-x-5 sm:inset-x-6 top-3 sm:top-4 h-20 sm:h-32 bg-parchment rounded shadow-inner z-10 transform translate-y-0 flex flex-col p-3 sm:p-4 border border-zinc-200 wiggle-change-transform">
         <p class="font-handwriting text-zinc-700 text-sm sm:text-lg">To My Sanjana Mah..</p>
         <div class="w-full h-[1px] bg-sky-100 mb-2 mt-2"></div>
         <div class="w-full h-[1px] bg-sky-100 mb-2"></div>
@@ -347,8 +347,9 @@
             </div>
           </div>
 
+          <!-- REPLACED LINE HERE -->
           <div class="mt-2 bg-[#fbf9f3] p-2.5 sm:p-4 rounded-lg border-l-4 border-retrored/60 text-center italic font-handwriting text-base sm:text-2xl text-zinc-700 leading-snug">
-            "Ne adikadi solluva laa... 'edhuva irundhalum kavala padadha da namba sendhu pthukulam nuu... nejama solren di namba sendhu pathukulam konjo naal aagum wait panuvom ana kandipa nadakum mah!' ..."
+            "Ne adikadi solluva laa... 'edhuva irundhalum kavala padadha da namba sendhu pathukulam nuu... nejama solren di namba sendhu pathukulam konjo naal aagum wait panuvom ana kandipa nadakum mah!' ..."
           </div>
         </div>
 
@@ -389,10 +390,8 @@
   </div>
 
   <script>
-    // Initialize GSAP custom behaviors
     gsap.registerPlugin(TextPlugin, CustomEase);
 
-    // Create high-grade organic easing curves for absolute fluid smoothness
     const fluidOut = CustomEase.create("fluidOut", "M0,0 C0.15,0.85 0.3,1 1,1");
     const fluidInOut = CustomEase.create("fluidInOut", "M0,0 C0.45,0 0.15,1 1,1");
 
@@ -472,11 +471,9 @@
       requestAnimationFrame(animateLoaderEngine);
     }
 
-    // Floating idle animation controller reference
     let envelopeIdleTween = null;
 
     function startEnvelopeIdle() {
-      // Create fresh non-conflicting hover chain
       envelopeIdleTween = gsap.to('#envelope-wrapper', {
         y: -10,
         duration: 2.5,
@@ -486,7 +483,6 @@
       });
     }
 
-    // Run the Loader Intro Lifecycle
     window.addEventListener('DOMContentLoaded', () => {
       resizeLoaderCanvas();
       spawnContinuousSparks();
@@ -513,7 +509,6 @@
         triggerLoaderExplosion();
       });
 
-      // Butter-smooth fluid split-dissolve for Loading Panel
       loadTl.to('#loading-screen', {
         opacity: 0,
         y: -30,
@@ -526,8 +521,6 @@
         }
       });
 
-      // --- CRITICAL ULTIMATE JERK FIX ---
-      // We use clean .fromTo to forcefully declare the start and end coordinates explicitly when playing.
       loadTl.fromTo('#envelope-wrapper', 
         { opacity: 0, y: 60 },
         {
@@ -536,7 +529,6 @@
           duration: 1.6,
           ease: "fluidOut",
           onStart: () => {
-            // Give pointer tracking back exactly when visual start initiates
             document.getElementById('envelope-wrapper').style.pointerEvents = "auto";
           },
           onComplete: () => {
@@ -546,7 +538,6 @@
         "-=0.8"
       );
     });
-
 
     /* --- YouTube Global Player API Implementation --- */
     let ytPlayer;
@@ -641,7 +632,6 @@
     }
     animateAmbient();
 
-
     /* --- Cosmic Stardust Cascade Particle Engine --- */
     const stardustCanvas = document.getElementById('stardust-canvas');
     const sctx = stardustCanvas.getContext('2d');
@@ -718,7 +708,6 @@
       requestAnimationFrame(animateStardust);
     }
     animateStardust();
-
 
     /* --- Walkman & Stereo Control Pipeline --- */
     let eqInterval = null;
@@ -807,7 +796,6 @@
       }
     });
 
-
     /* --- Presentation Structural State Machine --- */
     let isOpened = false;
     let typingInitiated = false;
@@ -816,7 +804,6 @@
       if (isOpened) return;
       isOpened = true;
 
-      // Instantly terminate active loops to prevent structural math calculation glitches
       if (envelopeIdleTween) {
         envelopeIdleTween.kill();
         envelopeIdleTween = null;
@@ -842,14 +829,12 @@
         ease: "power2.in"
       }, "-=0.5");
 
-      // Hardware accelerated 3D paper folding logic
       tl.to('#envelope-top-flap', {
         rotateX: 180,
         duration: 1.2,
         ease: "fluidInOut"
       }, "-=0.2");
 
-      // Smooth structural sheet layout exit
       tl.to('#dummy-letter', {
         y: -150,
         duration: 1.2,
@@ -865,7 +850,6 @@
         display: "none"
       }, "-=0.6");
 
-      // Display main document interface
       tl.set('#letter-modal', { pointerEvents: "auto" });
       tl.to('#letter-modal', {
         opacity: 1,
@@ -873,13 +857,11 @@
         ease: "power2.out"
       }, "-=0.6");
 
-      // Smooth modular rise
       gsap.fromTo('#modal-card', 
         { y: 80, scale: 0.95 }, 
         { y: 0, scale: 1, duration: 1.4, ease: "fluidOut" }
       );
 
-      // ================= CINEMATIC GATE FOLD ANIMATION =================
       tl.to('#gate-left', {
         width: '0%',
         duration: 1.5,
@@ -902,7 +884,6 @@
     });
 
     document.getElementById('close-letter-btn').addEventListener('click', () => {
-      // Clear active elements down the structural tree to prevent layout collisions
       gsap.killTweensOf(['#gate-left', '#gate-right', '#modal-card', '#letter-modal', '#envelope-wrapper', '#dummy-letter', '#envelope-top-flap', '#wax-seal']);
       
       gsap.set(['#gate-left', '#gate-right'], { opacity: 1 });
@@ -926,7 +907,6 @@
         ease: "power2.in"
       }, "-=0.4");
 
-      // Safely reset configuration properties on active envelope window
       closeTl.set('#envelope-wrapper', { display: 'flex', pointerEvents: "auto" });
       closeTl.fromTo('#envelope-wrapper',
         { opacity: 0, y: 40 },
@@ -970,7 +950,6 @@
       isOpened = false;
     });
 
-
     /* --- Tab Component Router Mapping --- */
     const tabs = {
       letter: {
@@ -1006,7 +985,6 @@
     tabs.jukebox.btn.addEventListener('click', () => selectTab('jukebox'));
     tabs.memories.btn.addEventListener('click', () => selectTab('memories'));
 
-
     /* --- Sequential Letter Typewriter Animation --- */
     function triggerHandwritingReveal() {
       if (typingInitiated) return;
@@ -1033,7 +1011,6 @@
         }, index === 0 ? "+=0.2" : "+=0.1");
       });
     }
-
 
     /* --- Grand Final Universe Ignite Sequence --- */
     document.getElementById('ignite-btn').addEventListener('click', (e) => {
