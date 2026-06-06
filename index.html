@@ -8,7 +8,7 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Playfair+Display:ital,wght=0,400;0,700;1,400&family=Poppins:wght=300;400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -58,8 +58,8 @@
     /* Notebook lines layout - Responsive Line Heights */
     .notebook-paper {
       background-image: linear-gradient(#dfebf6 1.5px, transparent 1.5px);
-      background-size: 100% 2.2rem;
-      line-height: 2.2rem;
+      background-size: 100% 1.8rem;
+      line-height: 1.8rem;
     }
     @media (min-width: 640px) {
       .notebook-paper {
@@ -68,13 +68,10 @@
       }
     }
 
-    /* Cassette reel spinning keyframes */
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-    .animate-spin-slow {
-      animation: spin 5.5s linear infinite;
+    /* Hardware Accelerated Spin for Cassette */
+    .smooth-spin {
+      transform-origin: center center;
+      will-change: transform;
     }
 
     /* Scrollbar aesthetics */
@@ -93,27 +90,41 @@
     }
   </style>
 </head>
-<body class="bg-[#141110] relative min-h-screen w-full flex flex-col items-center justify-center overflow-x-hidden text-slate-100 px-2 sm:px-4">
+<body class="bg-[#141110] relative min-h-screen w-full flex flex-col items-center justify-center overflow-x-hidden text-slate-100 px-3 sm:px-4 antialiased">
+
+  <!-- ================= DEEPAWALI SPARKLER LOADING SCREEN ================= -->
+  <div id="loading-screen" class="fixed inset-0 bg-[#070505] z-[100] flex flex-col items-center justify-center select-none will-change-opacity">
+    <canvas id="loader-sparkle-canvas" class="absolute inset-0 pointer-events-none"></canvas>
+    <div class="text-center px-4 relative z-10 flex flex-col items-center">
+      <div class="absolute w-48 h-48 bg-amber-500/10 rounded-full blur-3xl -z-10 animate-pulse"></div>
+      <h1 id="loader-text" class="font-serif italic text-2xl sm:text-5xl md:text-6xl text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-orange-300 to-yellow-100 drop-shadow-[0_4px_12px_rgba(251,191,36,0.3)] font-bold tracking-wide opacity-0 transform scale-95 will-change-transform">
+        Happy Birthday Sanjana Mah... ✨
+      </h1>
+      <p id="loader-subtext" class="font-poppins text-[9px] sm:text-xs text-amber-500/60 uppercase tracking-[0.4em] mt-6 opacity-0">
+        Igniting her cosmic celebration
+      </p>
+    </div>
+  </div>
 
   <!-- Ambient Paper Texture Grain Overlay -->
   <div class="paper-grain"></div>
 
   <!-- Background Floating Vector System -->
-  <canvas id="ambient-canvas" class="fixed inset-0 pointer-events-none z-0 opacity-40"></canvas>
+  <canvas id="ambient-canvas" class="fixed inset-0 pointer-events-none z Suspend-0 opacity-40"></canvas>
 
   <!-- Hidden YouTube Player Container Needed for API -->
   <div id="yt-player" class="absolute pointer-events-none opacity-0 w-1 h-1"></div>
 
   <!-- Interactive 3D Folding Envelope Portal -->
-  <div id="envelope-wrapper" class="relative z-10 select-none cursor-pointer flex flex-col items-center p-2 w-full max-w-[450px]">
-    <div id="envelope-body-wrapper" class="relative w-full aspect-[3/2] transition-transform duration-500 hover:scale-[1.02]">
+  <div id="envelope-wrapper" class="relative z-10 select-none cursor-pointer flex flex-col items-center p-2 w-full max-w-[420px] sm:max-w-[450px] opacity-0 will-change-transform">
+    <div id="envelope-body-wrapper" class="relative w-full aspect-[3/2] transition-transform duration-700 ease-out hover:scale-[1.02]">
       
       <!-- Envelope Backboard Frame -->
-      <div class="absolute inset-0 bg-[#f4ebd0] rounded-xl shadow-[0_25px_60px_rgba(0,0,0,0.6)] border border-parchment-darker/50"></div>
+      <div class="absolute inset-0 bg-[#f4ebd0] rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.55)] sm:shadow-[0_30px_70px_rgba(0,0,0,0.65)] border border-parchment-darker/50"></div>
 
       <!-- Dummy Paper Page Sticking Inside Envelope -->
-      <div id="dummy-letter" class="absolute inset-x-6 top-4 h-24 sm:h-32 bg-parchment rounded shadow-inner z-10 transform translate-y-0 flex flex-col p-3 sm:p-4 border border-zinc-200">
-        <p class="font-handwriting text-zinc-700 text-base sm:text-lg">To My Sanjana Mah..</p>
+      <div id="dummy-letter" class="absolute inset-x-5 sm:inset-x-6 top-3 sm:top-4 h-20 sm:h-32 bg-parchment rounded shadow-inner z-10 transform translate-y-0 flex flex-col p-3 sm:p-4 border border-zinc-200 will-change-transform">
+        <p class="font-handwriting text-zinc-700 text-sm sm:text-lg">To My Sanjana Mah..</p>
         <div class="w-full h-[1px] bg-sky-100 mb-2 mt-2"></div>
         <div class="w-full h-[1px] bg-sky-100 mb-2"></div>
       </div>
@@ -128,7 +139,7 @@
       <div class="absolute inset-0 bg-parchment rounded-xl z-25" style="clip-path: polygon(0 100%, 100% 100%, 50% 45%); border-bottom: 1px solid #dfcca0;"></div>
 
       <!-- Folding Top Flap Layer -->
-      <div id="envelope-top-flap" class="absolute inset-0 origin-top z-30 transition-transform duration-300" style="clip-path: polygon(0 0, 100% 0, 50% 48%); background-color: #fcfbf7; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));">
+      <div id="envelope-top-flap" class="absolute inset-0 origin-top z-30 will-change-transform" style="clip-path: polygon(0 0, 100% 0, 50% 48%); background-color: #fcfbf7; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));">
         <div class="absolute inset-0 bg-[#e4d3a8] opacity-90"></div>
       </div>
 
@@ -136,12 +147,12 @@
       <div class="absolute inset-2 sm:inset-3 border border-dashed border-retrored/20 rounded-lg pointer-events-none z-25"></div>
 
       <!-- Interactive Wax Seal Component -->
-      <div id="wax-seal" class="absolute left-1/2 top-[48%] -translate-x-1/2 -translate-y-1/2 z-40 flex flex-col items-center">
-        <div class="w-14 h-14 sm:w-20 sm:h-20 bg-gradient-to-br from-red-700 via-rose-800 to-red-950 rounded-full shadow-lg border border-red-500/20 flex items-center justify-center cursor-pointer transform hover:scale-105 active:scale-95 transition-all duration-300">
+      <div id="wax-seal" class="absolute left-1/2 top-[48%] -translate-x-1/2 -translate-y-1/2 z-40 flex flex-col items-center will-change-transform">
+        <div class="w-12 h-12 sm:w-20 sm:h-20 bg-gradient-to-br from-red-700 via-rose-800 to-red-950 rounded-full shadow-lg border border-red-500/20 flex items-center justify-center cursor-pointer transform hover:scale-105 active:scale-95 transition-all duration-300">
           <div class="absolute inset-1 rounded-full border border-yellow-500/10 opacity-40"></div>
-          <span class="font-serif text-amber-100 text-sm sm:text-lg font-bold tracking-wider select-none drop-shadow-md">M & S</span>
+          <span class="font-serif text-amber-100 text-xs sm:text-lg font-bold tracking-wider select-none drop-shadow-md">M & S</span>
         </div>
-        <div class="absolute w-14 h-14 sm:w-20 sm:h-20 bg-red-600/20 rounded-full -z-10 animate-ping"></div>
+        <div class="absolute w-12 h-12 sm:w-20 sm:h-20 bg-red-600/20 rounded-full -z-10 animate-ping"></div>
       </div>
 
     </div>
@@ -153,25 +164,33 @@
   </div>
 
   <!-- Multi-Page Tabbed Scrapbook Interface -->
-  <div id="letter-modal" class="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6 opacity-0 pointer-events-none">
-    <div class="bg-parchment-paper w-full max-w-2xl h-[90vh] sm:h-[85vh] rounded-2xl shadow-[0_25px_60px_rgba(0,0,0,0.75)] border-2 sm:border-4 border-retrored/10 flex flex-col relative overflow-hidden">
+  <div id="letter-modal" class="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6 opacity-0 pointer-events-none will-change-opacity">
+    <div id="modal-card" class="bg-parchment-paper w-full max-w-2xl h-[92vh] sm:h-[85vh] rounded-2xl shadow-[0_35px_75px_rgba(0,0,0,0.8)] border-2 sm:border-4 border-retrored/10 flex flex-col relative overflow-hidden transform will-change-transform">
       
+      <!-- ================= CINEMATIC GATE FOLD DOORS ================= -->
+      <div id="gate-left" class="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-[#e4d3a8] to-[#f6f1e3] z-[60] border-r border-retrored/20 flex items-center justify-end shadow-[5px_0_15px_rgba(0,0,0,0.15)] will-change-transform">
+        <div class="w-1 h-20 bg-retrored/20 mr-2 rounded-full"></div>
+      </div>
+      <div id="gate-right" class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-[#e4d3a8] to-[#f6f1e3] z-[60] border-l border-retrored/20 flex items-center justify-start shadow-[-5px_0_15px_rgba(0,0,0,0.15)] will-change-transform">
+        <div class="w-1 h-20 bg-retrored/20 ml-2 rounded-full"></div>
+      </div>
+
       <!-- Back to Envelope Control -->
-      <button id="close-letter-btn" class="absolute top-3 right-3 sm:top-4 sm:right-4 text-zinc-400 hover:text-retrored transition-colors duration-200 z-50 pointer-events-auto p-1" title="Go back to envelope">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+      <button id="close-letter-btn" class="absolute top-2 right-2 sm:top-4 sm:right-4 text-zinc-400 hover:text-retrored transition-colors duration-300 z-50 pointer-events-auto p-2" title="Go back to envelope">
+        <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
         </svg>
       </button>
 
       <!-- Vintage Notebook Scrapbook Label Ribbon Tabs -->
-      <div class="flex items-center gap-1 px-3 sm:px-8 pt-4 sm:pt-5 z-40 bg-parchment-paper border-b border-[#ffd1d1]">
-        <button id="tab-btn-letter" class="px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-sm font-poppins font-semibold uppercase tracking-wider rounded-t-lg bg-retrored text-white border-t border-x border-retrored/10 transition-all duration-200">
+      <div class="flex items-center gap-1 px-2 sm:px-8 pt-3 sm:pt-5 z-40 bg-parchment-paper border-b border-[#ffd1d1]">
+        <button id="tab-btn-letter" class="px-2.5 sm:px-4 py-1 sm:py-2 text-[10px] sm:text-sm font-poppins font-semibold uppercase tracking-wider rounded-t-lg bg-retrored text-white border-t border-x border-retrored/10 transition-all duration-300">
           📝 Note
         </button>
-        <button id="tab-btn-jukebox" class="px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-sm font-poppins font-semibold uppercase tracking-wider rounded-t-lg bg-zinc-200/80 hover:bg-zinc-300/80 text-zinc-700 transition-all duration-200">
+        <button id="tab-btn-jukebox" class="px-2.5 sm:px-4 py-1 sm:py-2 text-[10px] sm:text-sm font-poppins font-semibold uppercase tracking-wider rounded-t-lg bg-zinc-200/80 hover:bg-zinc-300/80 text-zinc-700 transition-all duration-300">
           📻 Jukebox
         </button>
-        <button id="tab-btn-memories" class="px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-sm font-poppins font-semibold uppercase tracking-wider rounded-t-lg bg-zinc-200/80 hover:bg-zinc-300/80 text-zinc-700 transition-all duration-200">
+        <button id="tab-btn-memories" class="px-2.5 sm:px-4 py-1 sm:py-2 text-[10px] sm:text-sm font-poppins font-semibold uppercase tracking-wider rounded-t-lg bg-zinc-200/80 hover:bg-zinc-300/80 text-zinc-700 transition-all duration-300">
           🌸 Album
         </button>
       </div>
@@ -179,32 +198,37 @@
       <!-- Scrapbook Contents Body Container -->
       <div class="flex-1 overflow-hidden relative">
         
+        <!-- Faint Beautiful Watermark Behind Content -->
+        <div class="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none select-none z-0">
+          <p class="font-serif italic text-5xl sm:text-9xl text-retrored tracking-widest text-center rotate-[-15deg]">Eternal Bond</p>
+        </div>
+
         <!-- ================= TAB 1: THE LETTER ================= -->
-        <div id="tab-panel-letter" class="absolute inset-0 overflow-y-auto px-4 sm:px-12 py-4 sm:py-6 flex flex-col transition-opacity duration-300 z-10 opacity-100">
-          <div class="notebook-paper relative pl-4 sm:pl-6 border-l-2 border-red-300 min-h-[250px] select-text">
-            <p id="line-1" class="font-handwriting text-xl sm:text-3xl text-blue-900 min-h-[2.2rem] sm:min-h-[2.5rem] leading-[2.2rem] sm:leading-[2.5rem]"></p>
-            <p id="line-2" class="font-handwriting text-xl sm:text-3xl text-blue-900 min-h-[2.2rem] sm:min-h-[2.5rem] leading-[2.2rem] sm:leading-[2.5rem] mt-2"></p>
-            <p id="line-3" class="font-handwriting text-xl sm:text-3xl text-blue-900 min-h-[2.2rem] sm:min-h-[2.5rem] leading-[2.2rem] sm:leading-[2.5rem] mt-2"></p>
-            <p id="line-4" class="font-handwriting text-xl sm:text-3xl text-blue-900 min-h-[2.2rem] sm:min-h-[2.5rem] leading-[2.2rem] sm:leading-[2.5rem] mt-2"></p>
-            <p id="line-5" class="font-handwriting text-xl sm:text-3xl text-blue-900 min-h-[2.2rem] sm:min-h-[2.5rem] leading-[2.2rem] sm:leading-[2.5rem] mt-2"></p>
+        <div id="tab-panel-letter" class="absolute inset-0 overflow-y-auto px-3 sm:px-12 py-3 sm:py-6 flex flex-col z-10 opacity-100 will-change-opacity">
+          <div class="notebook-paper relative pl-3 sm:pl-6 border-l-2 border-red-300 min-h-[220px] select-text">
+            <p id="line-1" class="font-handwriting text-[17px] sm:text-3xl text-blue-900 min-h-[1.8rem] sm:min-h-[2.5rem] leading-[1.8rem] sm:leading-[2.5rem]"></p>
+            <p id="line-2" class="font-handwriting text-[17px] sm:text-3xl text-blue-900 min-h-[1.8rem] sm:min-h-[2.5rem] leading-[1.8rem] sm:leading-[2.5rem] mt-2"></p>
+            <p id="line-3" class="font-handwriting text-[17px] sm:text-3xl text-blue-900 min-h-[1.8rem] sm:min-h-[2.5rem] leading-[1.8rem] sm:leading-[2.5rem] mt-2"></p>
+            <p id="line-4" class="font-handwriting text-[17px] sm:text-3xl text-blue-900 min-h-[1.8rem] sm:min-h-[2.5rem] leading-[1.8rem] sm:leading-[2.5rem] mt-2"></p>
+            <p id="line-5" class="font-handwriting text-[17px] sm:text-3xl text-blue-900 min-h-[1.8rem] sm:min-h-[2.5rem] leading-[1.8rem] sm:leading-[2.5rem] mt-2"></p>
           </div>
 
-          <div class="mt-8 pt-4 border-t border-[#ffd1d1] flex flex-col sm:flex-row gap-2 justify-between items-center text-[10px] sm:text-xs text-zinc-400 font-poppins text-center">
+          <div class="mt-auto pt-4 border-t border-[#ffd1d1] flex flex-col sm:flex-row gap-2 justify-between items-center text-[10px] sm:text-xs text-zinc-400 font-poppins text-center">
             <span>Flip to Tab 2 to tune the deck 📻</span>
             <span>With Love, Forever ♾️</span>
           </div>
         </div>
 
         <!-- ================= TAB 2: THE JUKEBOX ================= -->
-        <div id="tab-panel-jukebox" class="absolute inset-0 overflow-y-auto px-4 sm:px-6 py-6 sm:py-8 flex flex-col justify-center items-center transition-opacity duration-300 z-0 opacity-0 pointer-events-none">
-          <div class="bg-gradient-to-br from-zinc-800 via-zinc-900 to-zinc-950 p-4 sm:p-5 rounded-xl shadow-2xl border-2 border-zinc-700/80 w-full max-w-sm select-none font-poppins text-zinc-300 relative mx-auto">
+        <div id="tab-panel-jukebox" class="absolute inset-0 overflow-y-auto px-3 sm:px-6 py-4 sm:py-8 flex flex-col justify-center items-center z-0 opacity-0 pointer-events-none will-change-opacity">
+          <div class="bg-gradient-to-br from-zinc-800 via-zinc-900 to-zinc-950 p-4 sm:p-5 rounded-xl shadow-2xl border-2 border-zinc-700/80 w-full max-w-[320px] sm:max-w-sm select-none font-poppins text-zinc-300 relative mx-auto">
             <div class="flex justify-between items-center text-[8px] sm:text-[9px] tracking-widest text-zinc-500 uppercase font-semibold">
               <span>90s Stereo Deck Player</span>
               <span>Model S-90 Walkman</span>
             </div>
 
             <!-- Jukebox Radio Dial Needle Indicator -->
-            <div class="mt-3 relative bg-zinc-950/80 rounded-lg p-2 border border-zinc-800/80 flex flex-col justify-center">
+            <div class="mt-3 relative bg-zinc-950/80 rounded-lg p-1.5 sm:p-2 border border-zinc-800/80 flex flex-col justify-center">
               <div class="flex justify-between text-[7px] sm:text-[8px] font-mono text-zinc-500 px-1 select-none">
                 <span>88 MHz</span>
                 <span>92 MHz</span>
@@ -212,18 +236,18 @@
                 <span>104 MHz</span>
                 <span>108 MHz</span>
               </div>
-              <div class="relative w-full h-[6px] bg-zinc-900 rounded-full mt-1 border border-zinc-950">
-                <div id="dial-needle" class="absolute w-[3px] h-full bg-rose-600 shadow-md shadow-rose-500/50" style="left: 10%;"></div>
+              <div class="relative w-full h-[5px] sm:h-[6px] bg-zinc-900 rounded-full mt-1 border border-zinc-950">
+                <div id="dial-needle" class="absolute w-[3px] h-full bg-rose-600 shadow-md shadow-rose-500/50 will-change-transform" style="left: 10%;"></div>
               </div>
             </div>
 
             <!-- Glass Cassette Spool Window -->
-            <div class="w-full h-20 sm:h-28 bg-[#0a0a0a] border-2 border-zinc-800 rounded-lg flex items-center justify-around relative overflow-hidden my-3 shadow-inner">
+            <div class="w-full h-16 sm:h-28 bg-[#0a0a0a] border-2 border-zinc-800 rounded-lg flex items-center justify-around relative overflow-hidden my-3 shadow-inner">
               
               <!-- Left Spool -->
-              <div class="relative w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center">
-                <div class="absolute w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-amber-950/85 border border-amber-900/60 opacity-80 shadow-md"></div>
-                <svg id="reel-left" class="w-7 h-7 sm:w-9 sm:h-9 text-zinc-400 z-10" viewBox="0 0 100 100">
+              <div class="relative w-8 h-8 sm:w-12 sm:h-12 flex items-center justify-center">
+                <div class="absolute w-8 h-8 sm:w-12 sm:h-12 rounded-full bg-amber-950/85 border border-amber-900/60 opacity-80 shadow-md"></div>
+                <svg id="reel-left" class="w-5 h-5 sm:w-9 sm:h-9 text-zinc-400 z-10 smooth-spin" viewBox="0 0 100 100">
                   <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="8" />
                   <circle cx="50" cy="50" r="18" fill="#18181b" stroke="currentColor" stroke-width="4" />
                   <line x1="50" y1="5" x2="50" y2="95" stroke="currentColor" stroke-width="6" />
@@ -234,19 +258,19 @@
               </div>
 
               <!-- Inside Ribbon Decoration -->
-              <div class="absolute inset-x-16 sm:inset-x-20 bottom-2 top-2 border border-zinc-800/40 bg-black/50 rounded flex flex-col justify-between p-1 pointer-events-none z-10">
-                <div class="h-[2px] bg-zinc-800 rounded"></div>
-                <div class="flex justify-between text-[6px] sm:text-[7px] font-mono text-zinc-600 px-1">
+              <div class="absolute inset-x-12 sm:inset-x-20 bottom-1 sm:bottom-2 top-1 sm:top-2 border border-zinc-800/40 bg-black/50 rounded flex flex-col justify-between p-0.5 sm:p-1 pointer-events-none z-10">
+                <div class="h-[1px] sm:h-[2px] bg-zinc-800 rounded"></div>
+                <div class="flex justify-between text-[5px] sm:text-[7px] font-mono text-zinc-600 px-1">
                   <span>SIDE A</span>
                   <span>NR</span>
                 </div>
-                <div class="h-[2px] bg-zinc-800 rounded"></div>
+                <div class="h-[1px] sm:h-[2px] bg-zinc-800 rounded"></div>
               </div>
 
               <!-- Right Spool -->
-              <div class="relative w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center">
-                <div class="absolute w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-amber-950/85 border border-amber-900/60 opacity-80 shadow-md"></div>
-                <svg id="reel-right" class="w-7 h-7 sm:w-9 sm:h-9 text-zinc-400 z-10" viewBox="0 0 100 100">
+              <div class="relative w-8 h-8 sm:w-12 sm:h-12 flex items-center justify-center">
+                <div class="absolute w-8 h-8 sm:w-12 sm:h-12 rounded-full bg-amber-950/85 border border-amber-900/60 opacity-80 shadow-md"></div>
+                <svg id="reel-right" class="w-5 h-5 sm:w-9 sm:h-9 text-zinc-400 z-10 smooth-spin" viewBox="0 0 100 100">
                   <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="8" />
                   <circle cx="50" cy="50" r="18" fill="#18181b" stroke="currentColor" stroke-width="4" />
                   <line x1="50" y1="5" x2="50" y2="95" stroke="currentColor" stroke-width="6" />
@@ -261,69 +285,69 @@
             <!-- Tape Deck Physical Trigger Actions -->
             <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-2">
               <div class="flex justify-center gap-1.5 bg-zinc-950 p-1 rounded-lg border border-zinc-800">
-                <button id="play-btn" class="p-2 rounded bg-zinc-850 hover:bg-zinc-700 active:scale-95 transition-all text-emerald-400 hover:text-emerald-300" title="Play">
-                  <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                <button id="play-btn" class="p-1.5 sm:p-2 rounded bg-zinc-850 hover:bg-zinc-700 active:scale-95 transition-all duration-300 text-emerald-400 hover:text-emerald-300" title="Play">
+                  <svg class="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                 </button>
-                <button id="pause-btn" class="p-2 rounded bg-zinc-850 hover:bg-zinc-700 active:scale-95 transition-all text-amber-500 hover:text-amber-400" title="Pause">
-                  <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                <button id="pause-btn" class="p-1.5 sm:p-2 rounded bg-zinc-850 hover:bg-zinc-700 active:scale-95 transition-all duration-300 text-amber-500 hover:text-amber-400" title="Pause">
+                  <svg class="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-current" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
                 </button>
-                <button id="stop-btn" class="p-2 rounded bg-zinc-850 hover:bg-zinc-700 active:scale-95 transition-all text-rose-500 hover:text-rose-400" title="Stop">
-                  <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>
+                <button id="stop-btn" class="p-1.5 sm:p-2 rounded bg-zinc-850 hover:bg-zinc-700 active:scale-95 transition-all duration-300 text-rose-500 hover:text-rose-400" title="Stop">
+                  <svg class="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-current" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>
                 </button>
               </div>
 
               <!-- LED Display & Animated Equalizer Wave -->
-              <div class="flex flex-1 justify-between items-center bg-black/90 rounded border border-zinc-850 px-2 sm:px-3 py-1 text-[10px] font-mono h-[34px]">
-                <span id="cassette-status" class="text-zinc-500 text-[9px] sm:text-[10px] truncate">[ STOPPED ]</span>
-                <div class="flex gap-[2px] items-end h-5 w-12 sm:w-16 px-1">
-                  <div class="eq-bar bg-gradient-to-t from-emerald-500 to-emerald-400 w-[2px] rounded-t transition-all duration-100 h-[2px]"></div>
-                  <div class="eq-bar bg-gradient-to-t from-emerald-500 to-emerald-400 w-[2px] rounded-t transition-all duration-100 h-[2px]"></div>
-                  <div class="eq-bar bg-gradient-to-t from-emerald-500 to-emerald-400 w-[2px] rounded-t transition-all duration-100 h-[2px]"></div>
-                  <div class="eq-bar bg-gradient-to-t from-emerald-500 to-emerald-400 w-[2px] rounded-t transition-all duration-100 h-[2px]"></div>
-                  <div class="eq-bar bg-gradient-to-t from-emerald-500 to-emerald-400 w-[2px] rounded-t transition-all duration-100 h-[2px]"></div>
-                  <div class="eq-bar bg-gradient-to-t from-emerald-500 to-emerald-400 w-[2px] rounded-t transition-all duration-100 h-[2px]"></div>
+              <div class="flex flex-1 justify-between items-center bg-black/90 rounded border border-zinc-850 px-2 py-1 text-[9px] font-mono h-[30px] sm:h-[34px]">
+                <span id="cassette-status" class="text-zinc-500 text-[8px] sm:text-[10px] truncate transition-colors duration-300">[ STOPPED ]</span>
+                <div class="flex gap-[2px] items-end h-4 sm:h-5 w-10 sm:w-16 px-1">
+                  <div class="eq-bar bg-gradient-to-t from-emerald-500 to-emerald-400 w-[2px] rounded-t transition-all duration-300 h-[2px]"></div>
+                  <div class="eq-bar bg-gradient-to-t from-emerald-500 to-emerald-400 w-[2px] rounded-t transition-all duration-300 h-[2px]"></div>
+                  <div class="eq-bar bg-gradient-to-t from-emerald-500 to-emerald-400 w-[2px] rounded-t transition-all duration-300 h-[2px]"></div>
+                  <div class="eq-bar bg-gradient-to-t from-emerald-500 to-emerald-400 w-[2px] rounded-t transition-all duration-300 h-[2px]"></div>
+                  <div class="eq-bar bg-gradient-to-t from-emerald-500 to-emerald-400 w-[2px] rounded-t transition-all duration-300 h-[2px]"></div>
+                  <div class="eq-bar bg-gradient-to-t from-emerald-500 to-emerald-400 w-[2px] rounded-t transition-all duration-300 h-[2px]"></div>
                 </div>
               </div>
             </div>
 
             <!-- Jukebox Favorite Tune Button -->
-            <button id="tune-btn" class="w-full mt-3 bg-gradient-to-r from-amber-600 to-amber-500 text-zinc-950 font-poppins font-bold text-xs sm:text-sm py-2 sm:py-2.5 px-4 rounded-lg shadow-md transform hover:brightness-110 active:scale-[0.98] transition-all duration-200 uppercase tracking-wider flex items-center justify-center gap-2 border border-amber-300/20">
+            <button id="tune-btn" class="w-full mt-3 bg-gradient-to-r from-amber-600 to-amber-500 text-zinc-950 font-poppins font-bold text-[11px] sm:text-sm py-2 px-3 sm:py-2.5 rounded-lg shadow-md transform hover:brightness-110 active:scale-[0.98] transition-all duration-300 uppercase tracking-wider flex items-center justify-center gap-2 border border-amber-300/20">
               <span>📻 Tune Our Fav</span>
             </button>
           </div>
         </div>
 
         <!-- ================= TAB 3: THE SCRAPBOOK ALBUM ================= -->
-        <div id="tab-panel-memories" class="absolute inset-0 overflow-y-auto px-4 sm:px-6 py-4 sm:py-6 flex flex-col transition-opacity duration-300 z-0 opacity-0 pointer-events-none">
-          <p class="font-serif italic text-retrored font-bold text-center text-base sm:text-lg mb-4 sm:mb-6">Sanjana's Nostalgic Scrapbook Album ✨</p>
+        <div id="tab-panel-memories" class="absolute inset-0 overflow-y-auto px-3 sm:px-6 py-4 flex flex-col z-0 opacity-0 pointer-events-none will-change-opacity">
+          <p class="font-serif italic text-retrored font-bold text-center text-sm sm:text-lg mb-3 sm:mb-6">Sanjana's Nostalgic Scrapbook Album ✨</p>
           
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 pb-4">
+          <div class="grid grid-cols-2 gap-3 sm:gap-6 pb-3">
             <!-- Polaroid memory card 1 -->
-            <div class="bg-white p-2 sm:p-3 shadow-lg rounded-sm transform -rotate-1 hover:rotate-0 hover:scale-105 transition-all duration-300 max-w-[180px] sm:max-w-[240px] mx-auto border border-zinc-200/60">
+            <div class="bg-white p-1.5 sm:p-3 shadow-md rounded-sm transform -rotate-1 hover:rotate-0 hover:scale-105 transition-all duration-500 w-full max-w-[140px] sm:max-w-[240px] mx-auto border border-zinc-200/60 will-change-transform">
               <div class="bg-amber-100/30 w-full aspect-square flex items-center justify-center border border-zinc-100 rounded-sm relative overflow-hidden">
-                <span class="text-3xl sm:text-4xl">🥺❤️</span>
+                <span class="text-xl sm:text-4xl">🥺❤️</span>
                 <div class="absolute inset-0 bg-gradient-to-tr from-[#800020]/5 to-transparent pointer-events-none"></div>
               </div>
-              <div class="pt-3 sm:pt-4 pb-1 sm:pb-2 text-center">
-                <p class="font-handwriting text-xl sm:text-2xl text-slate-800 font-bold">Unpola Yaarumillai</p>
-                <p class="text-[11px] sm:text-[12px] font-handwriting text-zinc-500 mt-0.5 lowercase">miss u sanjana mah</p>
+              <div class="pt-2 sm:pt-4 pb-0.5 sm:pb-2 text-center">
+                <p class="font-handwriting text-sm sm:text-2xl text-slate-800 font-bold whitespace-nowrap overflow-hidden text-ellipsis">Unpola Yaarumillai</p>
+                <p class="text-[9px] sm:text-[12px] font-handwriting text-zinc-500 mt-0.5 lowercase">miss u sanjana mah</p>
               </div>
             </div>
 
             <!-- Polaroid memory card 2 -->
-            <div class="bg-white p-2 sm:p-3 shadow-lg rounded-sm transform rotate-2 hover:rotate-0 hover:scale-105 transition-all duration-300 max-w-[180px] sm:max-w-[240px] mx-auto border border-zinc-200/60">
+            <div class="bg-white p-1.5 sm:p-3 shadow-md rounded-sm transform rotate-2 hover:rotate-0 hover:scale-105 transition-all duration-500 w-full max-w-[140px] sm:max-w-[240px] mx-auto border border-zinc-200/60 will-change-transform">
               <div class="bg-indigo-100/30 w-full aspect-square flex items-center justify-center border border-zinc-100 rounded-sm relative overflow-hidden">
-                <span class="text-3xl sm:text-4xl">💫♾️</span>
+                <span class="text-xl sm:text-4xl">💫♾️</span>
                 <div class="absolute inset-0 bg-gradient-to-tr from-[#800020]/5 to-transparent pointer-events-none"></div>
               </div>
-              <div class="pt-3 sm:pt-4 pb-1 sm:pb-2 text-center">
-                <p class="font-handwriting text-xl sm:text-2xl text-slate-800 font-bold">Always For You</p>
-                <p class="text-[9px] sm:text-[10px] font-poppins text-zinc-400 uppercase mt-0.5">Anysituvation.</p>
+              <div class="pt-2 sm:pt-4 pb-0.5 sm:pb-2 text-center">
+                <p class="font-handwriting text-sm sm:text-2xl text-slate-800 font-bold whitespace-nowrap overflow-hidden text-ellipsis">Always For You</p>
+                <p class="text-[8px] sm:text-[10px] font-poppins text-zinc-400 uppercase mt-0.5 tracking-tighter sm:tracking-normal">any situation.</p>
               </div>
             </div>
           </div>
 
-          <div class="mt-2 bg-[#fbf9f3] p-3 sm:p-4 rounded-lg border-l-4 border-retrored/60 text-center italic font-handwriting text-lg sm:text-2xl text-zinc-700 leading-snug">
+          <div class="mt-2 bg-[#fbf9f3] p-2.5 sm:p-4 rounded-lg border-l-4 border-retrored/60 text-center italic font-handwriting text-base sm:text-2xl text-zinc-700 leading-snug">
             "Ne adikadi solluva laa... 'edhuva irundhalum kavala padadha da namba sendhu pthukulam nuu... nejama solren di namba sendhu pathukulam konjo naal aagum wait panuvom ana kandipa nadakum mah!' ..."
           </div>
         </div>
@@ -331,9 +355,9 @@
       </div>
 
       <!-- Scrapbook Footer Link Block -->
-      <div class="p-3 sm:p-4 bg-parchment-paper border-t border-[#ffd1d1]/80 flex justify-center items-center z-40 relative">
-        <button id="ignite-btn" class="relative group overflow-hidden px-5 sm:px-6 py-2.5 sm:py-3 rounded-full bg-gradient-to-r from-[#141110] to-[#251815] border border-amber-500/40 shadow-md cursor-pointer transform hover:scale-105 hover:border-amber-400 active:scale-95 transition-all duration-300">
-          <span class="relative z-10 text-amber-200 font-poppins text-[11px] sm:text-sm font-bold tracking-widest uppercase flex items-center gap-1.5">
+      <div class="p-2 sm:p-4 bg-parchment-paper border-t border-[#ffd1d1]/80 flex justify-center items-center z-40 relative">
+        <button id="ignite-btn" class="relative group overflow-hidden px-4 sm:px-6 py-2 sm:py-3 rounded-full bg-gradient-to-r from-[#141110] to-[#251815] border border-amber-500/40 shadow-md cursor-pointer transform hover:scale-105 hover:border-amber-400 active:scale-95 transition-all duration-500 will-change-transform">
+          <span class="relative z-10 text-amber-200 font-poppins text-[10px] sm:text-sm font-bold tracking-widest uppercase flex items-center gap-1.5">
             Ignite Universe 💫
           </span>
         </button>
@@ -346,21 +370,21 @@
   <canvas id="stardust-canvas" class="fixed inset-0 pointer-events-none z-[60]"></canvas>
 
   <!-- Grand Final Surprise Overlay Modal -->
-  <div id="final-modal" class="fixed inset-0 z-[70] bg-[#0c0a0a]/95 backdrop-blur-xl flex items-center justify-center p-4 transition-all duration-1000 opacity-0 pointer-events-none">
-    <button id="close-final-btn" class="absolute top-4 right-4 sm:top-6 sm:right-6 text-zinc-500 hover:text-zinc-300 transition-colors pointer-events-auto p-1 text-xs font-poppins tracking-widest uppercase flex items-center gap-1" title="Back to card">
+  <div id="final-modal" class="fixed inset-0 z-[70] bg-[#0c0a0a]/95 backdrop-blur-xl flex items-center justify-center p-4 opacity-0 pointer-events-none will-change-opacity">
+    <button id="close-final-btn" class="absolute top-4 right-4 sm:top-6 sm:right-6 text-zinc-500 hover:text-zinc-300 transition-colors pointer-events-auto p-2 text-[10px] sm:text-xs font-poppins tracking-widest uppercase flex items-center gap-1" title="Back to card">
       <span>Close</span>
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
       </svg>
     </button>
 
-    <div class="text-center max-w-2xl px-4 flex flex-col items-center select-none">
-      <div class="w-16 h-16 sm:w-20 sm:h-20 mb-4 sm:mb-6 relative">
+    <div id="final-content" class="text-center max-w-2xl px-4 flex flex-col items-center select-none transform will-change-transform">
+      <div class="w-12 h-12 sm:w-20 sm:h-20 mb-4 sm:mb-6 relative">
         <div class="absolute inset-0 bg-red-500/10 rounded-full blur-xl animate-pulse"></div>
-        <span class="text-5xl sm:text-6xl animate-bounce inline-block">❤️</span>
+        <span class="text-4xl sm:text-6xl animate-bounce inline-block">❤️</span>
       </div>
-      <h2 id="final-text" class="font-serif italic text-xl sm:text-3xl md:text-4xl text-amber-100 font-bold leading-relaxed tracking-wide min-h-[100px]"></h2>
-      <p class="text-zinc-500 font-poppins text-[9px] sm:text-xs uppercase tracking-[0.3em] mt-6 sm:mt-8 animate-pulse">Eternal Bond Dedicated to Sanjana</p>
+      <h2 id="final-text" class="font-serif italic text-lg sm:text-3xl md:text-4xl text-amber-100 font-bold leading-relaxed tracking-wide min-h-[80px] sm:min-h-[100px]"></h2>
+      <p class="text-zinc-500 font-poppins text-[8px] sm:text-[10px] uppercase tracking-[0.3em] mt-6 sm:mt-8 animate-pulse">Eternal Bond Dedicated to Sanjana</p>
     </div>
   </div>
 
@@ -368,9 +392,157 @@
     // Initialize GSAP custom behaviors
     gsap.registerPlugin(TextPlugin, CustomEase);
 
+    // Create high-grade organic easing curves for absolute fluid smoothness
+    const fluidOut = CustomEase.create("fluidOut", "M0,0 C0.15,0.85 0.3,1 1,1");
+    const fluidInOut = CustomEase.create("fluidInOut", "M0,0 C0.45,0 0.15,1 1,1");
+
+    /* --- Deepawali Sparkler Loading Canvas System --- */
+    const loadCanvas = document.getElementById('loader-sparkle-canvas');
+    const lctx = loadCanvas.getContext('2d');
+    let loadParticles = [];
+    let loadActive = true;
+
+    function resizeLoaderCanvas() {
+      loadCanvas.width = window.innerWidth;
+      loadCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeLoaderCanvas);
+    resizeLoaderCanvas();
+
+    class LoaderSparkle {
+      constructor(x, y, isExplosion = false) {
+        this.x = x;
+        this.y = y;
+        const angle = Math.random() * Math.PI * 2;
+        const speed = isExplosion ? (Math.random() * 9 + 4) : (Math.random() * 3 + 1);
+        this.vx = Math.cos(angle) * speed;
+        this.vy = Math.sin(angle) * speed;
+        this.alpha = 1;
+        this.decay = Math.random() * 0.02 + 0.01;
+        this.size = Math.random() * 2 + 1;
+        this.color = `hsl(${Math.random() * 35 + 15}, 100%, ${Math.random() * 20 + 70}%)`;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.vy += 0.05; 
+        this.alpha -= this.decay;
+      }
+      draw() {
+        lctx.save();
+        lctx.globalAlpha = this.alpha;
+        lctx.fillStyle = this.color;
+        lctx.shadowBlur = Math.random() * 8 + 4;
+        lctx.shadowColor = this.color;
+        lctx.beginPath();
+        lctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        lctx.fill();
+        lctx.restore();
+      }
+    }
+
+    function spawnContinuousSparks() {
+      if (!loadActive) return;
+      const cx = loadCanvas.width / 2 + (Math.random() * 200 - 100);
+      const cy = loadCanvas.height / 2 + (Math.random() * 100 - 50);
+      for(let i=0; i<4; i++) {
+        loadParticles.push(new LoaderSparkle(cx, cy, false));
+      }
+      setTimeout(spawnContinuousSparks, 50);
+    }
+
+    function triggerLoaderExplosion() {
+      const cx = loadCanvas.width / 2;
+      const cy = loadCanvas.height / 2;
+      for(let i=0; i<150; i++) {
+        loadParticles.push(new LoaderSparkle(cx, cy, true));
+      }
+    }
+
+    function animateLoaderEngine() {
+      if (!loadActive && loadParticles.length === 0) return;
+      lctx.clearRect(0, 0, loadCanvas.width, loadCanvas.height);
+      
+      for(let i = loadParticles.length - 1; i >= 0; i--) {
+        const p = loadParticles[i];
+        p.update();
+        p.draw();
+        if(p.alpha <= 0) loadParticles.splice(i, 1);
+      }
+      requestAnimationFrame(animateLoaderEngine);
+    }
+
+    // Floating idle animation controller reference
+    let envelopeIdleTween = null;
+
+    function startEnvelopeIdle() {
+      // Create fresh non-conflicting hover chain
+      envelopeIdleTween = gsap.to('#envelope-wrapper', {
+        y: -10,
+        duration: 2.5,
+        ease: "sine.inOut",
+        yoyo: true,
+        repeat: -1
+      });
+    }
+
+    // Run the Loader Intro Lifecycle
+    window.addEventListener('DOMContentLoaded', () => {
+      resizeLoaderCanvas();
+      spawnContinuousSparks();
+      animateLoaderEngine();
+
+      const loadTl = gsap.timeline();
+
+      loadTl.to('#loader-text', {
+        opacity: 1,
+        scale: 1,
+        duration: 1.8,
+        ease: "fluidOut"
+      }, "+=0.4");
+
+      loadTl.to('#loader-subtext', {
+        opacity: 1,
+        duration: 1.2,
+        ease: "power2.out"
+      }, "-=0.8");
+
+      loadTl.to({}, { duration: 1.5 });
+
+      loadTl.add(() => {
+        triggerLoaderExplosion();
+      });
+
+      // Butter-smooth fluid split-dissolve for Loading Panel
+      loadTl.to('#loading-screen', {
+        opacity: 0,
+        y: -30,
+        duration: 1.2,
+        ease: "fluidInOut",
+        onComplete: () => {
+          loadActive = false;
+          document.getElementById('loading-screen').remove();
+        }
+      });
+
+      // Liquid smooth entry fade-in for Envelope Portal
+      loadTl.set('#envelope-wrapper', { pointerEvents: "auto", y: 60 });
+      loadTl.to('#envelope-wrapper', {
+        opacity: 1,
+        y: 0,
+        duration: 1.6,
+        ease: "fluidOut",
+        onComplete: () => {
+          startEnvelopeIdle();
+        }
+      }, "-=0.8");
+    });
+
+
     /* --- YouTube Global Player API Implementation --- */
     let ytPlayer;
     let isTuned = false;
+    let spinTween = null;
 
     function onYouTubeIframeAPIReady() {
       ytPlayer = new YT.Player('yt-player', {
@@ -421,7 +593,7 @@
       reset() {
         this.x = Math.random() * ambientCanvas.width;
         this.y = ambientCanvas.height + 50;
-        this.size = Math.random() * 10 + 10;
+        this.size = Math.random() * 8 + 8;
         this.speed = Math.random() * 0.4 + 0.15;
         this.opacity = Math.random() * 0.3 + 0.08;
         this.symbol = driftSymbols[Math.floor(Math.random() * driftSymbols.length)];
@@ -446,7 +618,7 @@
       }
     }
 
-    for (let i = 0; i < 16; i++) { 
+    for (let i = 0; i < 12; i++) { 
       ambientParticles.push(new AmbientParticle());
     }
 
@@ -518,7 +690,7 @@
     }
 
     function triggerExplosion(x, y) {
-      const pCount = window.innerWidth < 640 ? 70 : 150; 
+      const pCount = window.innerWidth < 640 ? 60 : 150; 
       for (let i = 0; i < pCount; i++) {
         stardustParticles.push(new StarParticle(x, y));
       }
@@ -547,10 +719,10 @@
       if (eqInterval) clearInterval(eqInterval);
       eqInterval = setInterval(() => {
         eqBars.forEach(bar => {
-          const targetHeight = Math.floor(Math.random() * 16) + 3;
+          const targetHeight = Math.floor(Math.random() * 14) + 3;
           bar.style.height = `${targetHeight}px`;
         });
-      }, 110);
+      }, 100);
     }
 
     function stopEqualizer() {
@@ -564,29 +736,32 @@
     }
 
     function setPlaybackUI(isPlaying) {
-      const reelLeft = document.getElementById('reel-left');
-      const reelRight = document.getElementById('reel-right');
       const statusDisplay = document.getElementById('cassette-status');
 
       if (isPlaying) {
-        reelLeft.classList.add('animate-spin-slow');
-        reelRight.classList.add('animate-spin-slow');
+        if(!spinTween) {
+          spinTween = gsap.to(['#reel-left', '#reel-right'], {
+            rotation: "+=360",
+            duration: 5,
+            repeat: -1,
+            ease: "none"
+          });
+        } else {
+          spinTween.play();
+        }
         statusDisplay.innerText = "[ PLAYING ] 98.3 MHz";
-        statusDisplay.classList.add('text-emerald-400');
-        statusDisplay.classList.remove('text-zinc-500', 'text-amber-500');
+        statusDisplay.className = "text-[8px] sm:text-[10px] truncate transition-colors duration-300 text-emerald-400";
         startEqualizer();
       } else {
-        reelLeft.classList.remove('animate-spin-slow');
-        reelRight.classList.remove('animate-spin-slow');
+        if(spinTween) spinTween.pause();
         statusDisplay.innerText = "[ PAUSED ]";
-        statusDisplay.classList.add('text-amber-500');
-        statusDisplay.classList.remove('text-zinc-500', 'text-emerald-400');
+        statusDisplay.className = "text-[8px] sm:text-[10px] truncate transition-colors duration-300 text-amber-500";
         stopEqualizer();
       }
     }
 
     document.getElementById('tune-btn').addEventListener('click', () => {
-      gsap.to('#dial-needle', { left: '53%', duration: 1.0, ease: 'power2.out' });
+      gsap.to('#dial-needle', { left: '53%', duration: 1.2, ease: 'fluidOut' });
       isTuned = true;
       if (ytPlayer && typeof ytPlayer.seekTo === 'function') {
         ytPlayer.seekTo(79, true); 
@@ -597,7 +772,7 @@
     document.getElementById('play-btn').addEventListener('click', () => {
       if (ytPlayer && typeof ytPlayer.playVideo === 'function') {
         if (!isTuned) {
-          gsap.to('#dial-needle', { left: '53%', duration: 1.0, ease: 'power2.out' });
+          gsap.to('#dial-needle', { left: '53%', duration: 1.2, ease: 'fluidOut' });
           ytPlayer.seekTo(79, true);
           isTuned = true;
         }
@@ -615,11 +790,11 @@
       if (ytPlayer && typeof ytPlayer.stopVideo === 'function') {
         ytPlayer.stopVideo();
         setPlaybackUI(false);
-        document.getElementById('cassette-status').innerText = "[ STOPPED ]";
-        document.getElementById('cassette-status').classList.remove('text-amber-500', 'text-emerald-400');
-        document.getElementById('cassette-status').classList.add('text-zinc-500');
+        const statusDisplay = document.getElementById('cassette-status');
+        statusDisplay.innerText = "[ STOPPED ]";
+        statusDisplay.className = "text-[8px] sm:text-[10px] truncate transition-colors duration-300 text-zinc-500";
         isTuned = false;
-        gsap.to('#dial-needle', { left: '10%', duration: 0.5, ease: 'power2.out' });
+        gsap.to('#dial-needle', { left: '10%', duration: 0.8, ease: 'fluidOut' });
       }
     });
 
@@ -632,80 +807,151 @@
       if (isOpened) return;
       isOpened = true;
 
+      // Crucial Fix: Instantly kill active idle hover loops to prevent overlapping transformation values
+      if (envelopeIdleTween) {
+        envelopeIdleTween.kill();
+        envelopeIdleTween = null;
+      }
+      gsap.killTweensOf('#envelope-wrapper');
+
+      gsap.set(['#gate-left', '#gate-right'], { width: '50%', opacity: 1 });
+      gsap.set('#envelope-top-flap', { transformPerspective: 600 });
+
       const tl = gsap.timeline();
 
       tl.to('#wax-seal', {
         scale: 0,
         opacity: 0,
-        duration: 0.5,
-        ease: "back.in(1.4)"
+        duration: 0.6,
+        ease: "back.in(1.5)"
       });
 
       tl.to('#click-prompt', {
         opacity: 0,
-        y: 8,
-        duration: 0.3
-      }, "-=0.4");
-
-      tl.to('#envelope-top-flap', {
-        rotateX: 180,
-        duration: 1.0,
-        ease: "power2.inOut"
-      }, "-=0.1");
-
-      tl.to('#dummy-letter', {
-        y: -140,
-        duration: 1.0,
-        ease: "power2.out"
-      }, "-=0.3");
-
-      tl.to('#envelope-wrapper', {
-        scale: 0.85,
-        opacity: 0,
-        duration: 0.8,
-        ease: "power2.inOut",
-        display: "none"
+        y: 10,
+        duration: 0.4,
+        ease: "power2.in"
       }, "-=0.5");
 
+      // Gorgeous hardware accelerated 3D flap flip
+      tl.to('#envelope-top-flap', {
+        rotateX: 180,
+        duration: 1.2,
+        ease: "fluidInOut"
+      }, "-=0.2");
+
+      // Smooth mechanical sheet pull out
+      tl.to('#dummy-letter', {
+        y: -150,
+        duration: 1.2,
+        ease: "fluidOut"
+      }, "-=0.4");
+
+      tl.to('#envelope-wrapper', {
+        scale: 0.9,
+        opacity: 0,
+        y: -40,
+        duration: 1.0,
+        ease: "fluidInOut",
+        display: "none"
+      }, "-=0.6");
+
+      // Display container window effortlessly
+      tl.set('#letter-modal', { pointerEvents: "auto" });
       tl.to('#letter-modal', {
         opacity: 1,
-        pointerEvents: "auto",
-        duration: 0.9,
-        ease: "power3.out",
+        duration: 0.6,
+        ease: "power2.out"
+      }, "-=0.6");
+
+      // Lift card from down under with fluid deceleration
+      gsap.fromTo('#modal-card', 
+        { y: 80, scale: 0.95 }, 
+        { y: 0, scale: 1, duration: 1.4, ease: "fluidOut" }
+      );
+
+      // ================= CINEMATIC GATE FOLD ANIMATION =================
+      tl.to('#gate-left', {
+        width: '0%',
+        duration: 1.5,
+        ease: "fluidInOut"
+      }, "-=0.8");
+
+      tl.to('#gate-right', {
+        width: '0%',
+        duration: 1.5,
+        ease: "fluidInOut"
+      }, "-=1.5");
+
+      tl.to(['#gate-left', '#gate-right'], {
+        opacity: 0,
+        duration: 0.3,
         onComplete: () => {
           triggerHandwritingReveal();
         }
-      }, "-=0.6");
+      }, "-=0.3");
     });
 
     document.getElementById('close-letter-btn').addEventListener('click', () => {
-      gsap.to('#letter-modal', {
+      // Clear all active running timelines on the elements to prevent visual snapping
+      gsap.killTweensOf(['#gate-left', '#gate-right', '#modal-card', '#letter-modal', '#envelope-wrapper', '#dummy-letter', '#envelope-top-flap', '#wax-seal']);
+      
+      gsap.set(['#gate-left', '#gate-right'], { opacity: 1 });
+      
+      const closeTl = gsap.timeline();
+
+      closeTl.to('#gate-left', { width: '50%', duration: 1.0, ease: "fluidInOut" });
+      closeTl.to('#gate-right', { width: '50%', duration: 1.0, ease: "fluidInOut" }, "-=1.0");
+
+      closeTl.to('#modal-card', {
+        y: 50,
+        scale: 0.95,
+        duration: 0.8,
+        ease: "fluidInOut"
+      }, "-=0.4");
+
+      closeTl.to('#letter-modal', {
         opacity: 0,
         pointerEvents: "none",
         duration: 0.6,
         ease: "power2.in"
-      });
+      }, "-=0.4");
 
-      gsap.set('#envelope-wrapper', { display: 'flex' });
-      gsap.to('#envelope-wrapper', {
-        scale: 1,
+      // Explicitly clear inline transforms before sliding back down safely
+      closeTl.set('#envelope-wrapper', { display: 'flex', y: 0, scale: 1 });
+      closeTl.to('#envelope-wrapper', {
         opacity: 1,
-        duration: 0.7,
-        ease: "power2.out"
-      });
+        duration: 1.0,
+        ease: "fluidOut",
+        onComplete: () => {
+          startEnvelopeIdle();
+        }
+      }, "-=0.2");
 
-      gsap.to('#dummy-letter', {
+      closeTl.to('#dummy-letter', {
         y: 0,
-        duration: 0.6,
-        ease: "power2.out"
-      });
+        duration: 0.8,
+        ease: "fluidInOut"
+      }, "-=0.8");
 
-      gsap.to('#wax-seal', {
+      closeTl.to('#envelope-top-flap', {
+        rotateX: 0,
+        duration: 0.8,
+        ease: "fluidInOut"
+      }, "-=0.6");
+
+      closeTl.to('#wax-seal', {
         scale: 1,
         opacity: 1,
-        duration: 0.5,
-        ease: "back.out(1.4)"
-      });
+        duration: 0.6,
+        ease: "back.out(1.5)"
+      }, "-=0.3");
+
+      closeTl.to('#click-prompt', {
+        opacity: 1,
+        y: 0,
+        duration: 0.4
+      }, "-=0.2");
 
       isOpened = false;
     });
@@ -731,15 +977,13 @@
       Object.keys(tabs).forEach(key => {
         const item = tabs[key];
         if (key === targetKey) {
-          item.panel.classList.add('opacity-100', 'z-10');
-          item.panel.classList.remove('opacity-0', 'z-0', 'pointer-events-none');
-          item.btn.classList.add('bg-retrored', 'text-white');
-          item.btn.classList.remove('bg-zinc-200/80', 'text-zinc-700', 'hover:bg-zinc-300/80');
+          gsap.set(item.panel, { zIndex: 10, pointerEvents: "auto" });
+          gsap.to(item.panel, { opacity: 1, y: 0, duration: 0.6, ease: "fluidOut" });
+          item.btn.className = "px-2.5 sm:px-4 py-1 sm:py-2 text-[10px] sm:text-sm font-poppins font-semibold uppercase tracking-wider rounded-t-lg bg-retrored text-white transition-all duration-300";
         } else {
-          item.panel.classList.add('opacity-0', 'z-0', 'pointer-events-none');
-          item.panel.classList.remove('opacity-100', 'z-10');
-          item.btn.classList.add('bg-zinc-200/80', 'text-zinc-700', 'hover:bg-zinc-300/80');
-          item.btn.classList.remove('bg-retrored', 'text-white');
+          gsap.set(item.panel, { zIndex: 0, pointerEvents: "none" });
+          gsap.to(item.panel, { opacity: 0, y: 15, duration: 0.4, ease: "power2.in" });
+          item.btn.className = "px-2.5 sm:px-4 py-1 sm:py-2 text-[10px] sm:text-sm font-poppins font-semibold uppercase tracking-wider rounded-t-lg bg-zinc-200/80 hover:bg-zinc-300/80 text-zinc-700 transition-all duration-300";
         }
       });
     }
@@ -758,7 +1002,7 @@
 
       const lyricStatements = [
         "Happy Birthday Mahh.. ❤️",
-        "I will always be for you on anytime on anysituvation..",
+        "I will always be for you on anytime on any situation..",
         "I love you the most n most mah that words cant even express... ✨",
         "12th la semmaya marks vaangu, edha pathiyum kavala padadha pathukulam..",
         "Nejama dii, edhuva irundhalum sendhu pathukulam !!! love u theee mostttt Epovum unakaga na iruken mahhh!!!! 🥺❤️"
@@ -766,13 +1010,13 @@
 
       lyricStatements.forEach((text, index) => {
         const targetId = `#line-${index + 1}`;
-        const durationValue = Math.max(1.2, text.length * 0.04);
+        const durationValue = Math.max(1.2, text.length * 0.035);
         
         timeline.to(targetId, {
           text: text,
           duration: durationValue,
           ease: "none"
-        }, index === 0 ? "+=0.3" : "+=0.1");
+        }, index === 0 ? "+=0.2" : "+=0.1");
       });
     }
 
@@ -786,28 +1030,39 @@
 
       const finalModal = document.getElementById('final-modal');
       
+      gsap.set('#final-content', { scale: 0.9, y: 30 });
+      
       gsap.to(finalModal, {
         opacity: 1,
         pointerEvents: "auto",
-        duration: 0.9,
-        ease: "power3.out",
+        duration: 0.8,
+        ease: "fluidOut",
         onComplete: () => {
           document.getElementById('final-text').innerText = "";
           gsap.to('#final-text', {
             text: "Once Again Happy Birthday di n lovee you soo much di Sanjana. ♾️❤️",
-            duration: 4.0,
+            duration: 3.8,
             ease: "none"
           });
         }
       });
+
+      gsap.to('#final-content', {
+        scale: 1,
+        y: 0,
+        duration: 1.2,
+        ease: "fluidOut"
+      });
     });
 
     document.getElementById('close-final-btn').addEventListener('click', () => {
-      gsap.to('#final-modal', {
+      const finalModal = document.getElementById('final-modal');
+      gsap.to('#final-content', { scale: 0.95, y: 20, duration: 0.6, ease: "fluidInOut" });
+      gsap.to(finalModal, {
         opacity: 0,
         pointerEvents: "none",
         duration: 0.6,
-        ease: "power2.in"
+        ease: "fluidInOut"
       });
     });
   </script>
